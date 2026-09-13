@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-const ROTATE_MS = 1800;
+// Only advances while the visitor is actually hovering the card — browsing a grid of
+// cards shows each one's cover photo at rest, and hovering previews the rest of the set.
+const ROTATE_MS = 2800;
 
 export function PropertyImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [index, setIndex] = useState(0);
-  const hovering = useRef(false);
+  const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    if (images.length <= 1) return;
+    if (!hovering || images.length <= 1) return;
     const timer = setInterval(() => {
-      if (!hovering.current) {
-        setIndex((i) => (i + 1) % images.length);
-      }
+      setIndex((i) => (i + 1) % images.length);
     }, ROTATE_MS);
     return () => clearInterval(timer);
-  }, [images.length]);
+  }, [hovering, images.length]);
 
   if (images.length === 0) {
     return (
@@ -27,11 +27,10 @@ export function PropertyImageCarousel({ images, alt }: { images: string[]; alt: 
   return (
     <div
       className="h-full w-full overflow-hidden"
-      onMouseEnter={() => {
-        hovering.current = true;
-      }}
+      onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => {
-        hovering.current = false;
+        setHovering(false);
+        setIndex(0); // rest on the cover photo again once the visitor moves on
       }}
     >
       <div
