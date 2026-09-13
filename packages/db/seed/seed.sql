@@ -326,14 +326,53 @@ where not exists (
 );
 
 -- ---------------------------------------------------------------------------
--- Dummy photos for every property that doesn't have any yet (deterministic
--- placeholder images keyed off property_code, so re-running this is a no-op
--- for properties that already have media).
+-- Dummy photos: real interior/exterior real-estate photography (Unsplash), not
+-- generic placeholder images. Each property gets 4 photos in a sensible order:
+-- exterior (cover), living room, bedroom, kitchen. Replaces any earlier
+-- generic (picsum) placeholders and (re)fills any property with none.
 -- ---------------------------------------------------------------------------
+delete from property_media where storage_path like 'https://picsum.photos%';
+
+with
+  exteriors(url) as (values
+    ('https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1615873968403-89e068629265?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=900&h=675&fit=crop&q=80')
+  ),
+  living_rooms(url) as (values
+    ('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&h=675&fit=crop&q=80')
+  ),
+  bedrooms(url) as (values
+    ('https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=900&h=675&fit=crop&q=80')
+  ),
+  kitchens(url) as (values
+    ('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=900&h=675&fit=crop&q=80'),
+    ('https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=900&h=675&fit=crop&q=80')
+  ),
+  numbered as (
+    select p.id as property_id, row_number() over (order by p.property_code) - 1 as n
+    from properties p
+    where not exists (select 1 from property_media pm where pm.property_id = p.id)
+  )
 insert into property_media (property_id, media_type, storage_path, is_cover, sort_order)
-select p.id, 'IMAGE', 'https://picsum.photos/seed/' || p.property_code || '-' || gs || '/900/675', (gs = 1), gs
-from properties p, generate_series(1, 4) as gs
-where not exists (select 1 from property_media pm where pm.property_id = p.id);
+select numbered.property_id, 'IMAGE', photo.url, photo.sort_order = 1, photo.sort_order
+from numbered
+cross join lateral (
+  values
+    (1, (select url from exteriors offset (numbered.n % 4) limit 1)),
+    (2, (select url from living_rooms offset (numbered.n % 6) limit 1)),
+    (3, (select url from bedrooms offset (numbered.n % 3) limit 1)),
+    (4, (select url from kitchens offset (numbered.n % 3) limit 1))
+) as photo(sort_order, url);
 
 -- ---------------------------------------------------------------------------
 -- A few more customers/leads covering other roles (tenant, broker, builder)
