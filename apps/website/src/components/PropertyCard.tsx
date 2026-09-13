@@ -12,7 +12,13 @@ function specsLine(p: CardProperty): string {
   return parts.join(" · ");
 }
 
-export function PropertyCard({ property }: { property: CardProperty }) {
+export function PropertyCard({
+  property,
+  imageUrl,
+}: {
+  property: CardProperty;
+  imageUrl?: string;
+}) {
   const distance = "distance_km" in property ? property.distance_km : undefined;
 
   return (
@@ -20,8 +26,18 @@ export function PropertyCard({ property }: { property: CardProperty }) {
       href={`/property/${property.property_code}`}
       className="group block overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-card transition hover:-translate-y-0.5 hover:shadow-lg"
     >
-      <div className="relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-brand-100 to-sand-100 text-brand-400">
-        <span className="text-sm">No photo yet</span>
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-brand-100 to-sand-100">
+        {imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageUrl}
+            alt={property.title}
+            loading="lazy"
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-brand-400">No photo yet</div>
+        )}
         <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-brand-800">
           {transactionLabel(property.transaction_type)}
         </span>

@@ -245,3 +245,144 @@ begin
     values (v_prop_vv3bhk, v_cust_amit, 16200000, 162000, 0, 'NEGOTIATION', 'Buyer negotiating final price.', v_staff);
   end if;
 end $$;
+
+-- ---------------------------------------------------------------------------
+-- More properties (broader variety across the same Thane-area localities)
+-- ---------------------------------------------------------------------------
+insert into properties (
+  transaction_type, property_type, status, title, description, price,
+  negotiation_min, negotiation_max, address, locality, city, state, postal_code,
+  latitude, longitude, bedrooms, bathrooms, parking, area_sqft,
+  owner_name, owner_phone, owner_email, internal_notes
+)
+select * from (values
+  ('SALE'::transaction_type, 'FLAT'::property_type, 'AVAILABLE'::property_status,
+   '2 BHK Apartment, Manpada', 'Well-lit 2 BHK close to schools and Eternity Mall.',
+   9200000::numeric, 8800000::numeric, 9200000::numeric, 'Near Eternity Mall, Manpada', 'Manpada', 'Thane', 'Maharashtra', '400607',
+   19.2015, 72.9760, 2, 2, 1, 920::numeric,
+   'Arvind Joshi', '+919821110015', null, null),
+
+  ('RENT'::transaction_type, 'FLAT'::property_type, 'AVAILABLE'::property_status,
+   '3 BHK for Rent, Kolshet Road', 'Spacious 3 BHK with modular kitchen, near IT parks.',
+   50000::numeric, null, null, 'Near Kolshet Road IT Park', 'Kolshet', 'Thane', 'Maharashtra', '400607',
+   19.2231, 72.9672, 3, 3, 2, 1300::numeric,
+   'Reema Shah', '+919821110016', null, null),
+
+  ('SALE'::transaction_type, 'FLAT'::property_type, 'AVAILABLE'::property_status,
+   '1 BHK Apartment, Wagle Estate', 'Affordable 1 BHK close to Wagle Industrial Estate offices.',
+   5800000::numeric, 5500000::numeric, 5800000::numeric, 'Near Wagle Estate Road No 16', 'Wagle Estate', 'Thane', 'Maharashtra', '400604',
+   19.1928, 72.9642, 1, 1, 0, 540::numeric,
+   'Nitin Sawant', '+919821110017', null, null),
+
+  ('SALE'::transaction_type, 'VILLA'::property_type, 'AVAILABLE'::property_status,
+   'Villa, Kasarvadavali', '4 BHK villa with private garden, gated community.',
+   28000000::numeric, 26500000::numeric, 28000000::numeric, 'Near Kasarvadavali Naka', 'Kasarvadavali', 'Thane', 'Maharashtra', '400615',
+   19.2582, 72.9815, 4, 4, 2, 2900::numeric,
+   'Pallavi Menon', '+919821110018', null, 'Gated society, maintenance staff available.'),
+
+  ('RENT'::transaction_type, 'FLAT'::property_type, 'AVAILABLE'::property_status,
+   '1 BHK for Rent, Majiwada', 'Cozy 1 BHK near Majiwada junction, ideal for bachelors.',
+   16000::numeric, null, null, 'Near Majiwada Junction', 'Majiwada', 'Thane', 'Maharashtra', '400601',
+   19.2042, 72.9702, 1, 1, 0, 480::numeric,
+   'Om Prakash', '+919821110019', null, null),
+
+  ('SALE'::transaction_type, 'COMMERCIAL'::property_type, 'AVAILABLE'::property_status,
+   'Shop, Thane West', 'Ground floor shop on a busy road, high footfall.',
+   14500000::numeric, 13800000::numeric, 14500000::numeric, 'Near Gaondevi Maidan, Thane West', 'Thane West', 'Thane', 'Maharashtra', '400602',
+   19.1965, 72.9648, null, 1, 0, 400::numeric,
+   'Sanjay Bhosale', '+919821110020', null, null),
+
+  ('SALE'::transaction_type, 'FLAT'::property_type, 'AVAILABLE'::property_status,
+   '2 BHK Apartment, Mulund West', 'Bright 2 BHK, walking distance to Mulund station.',
+   9800000::numeric, 9300000::numeric, 9800000::numeric, 'Near Mulund Station West', 'Mulund', 'Mumbai', 'Maharashtra', '400080',
+   19.1730, 72.9412, 2, 2, 1, 890::numeric,
+   'Kavita Iyer', '+919821110021', null, null),
+
+  ('RENT'::transaction_type, 'FLAT'::property_type, 'AVAILABLE'::property_status,
+   '2 BHK for Rent, Vasant Vihar', 'Second 2 BHK rental option in the same premium complex.',
+   32000::numeric, null, null, 'Vasant Vihar Complex, Pokhran Road No 1', 'Vasant Vihar', 'Thane', 'Maharashtra', '400606',
+   19.2108, 72.9775, 2, 2, 1, 980::numeric,
+   'Ashok Pillai', '+919821110022', null, null),
+
+  ('SALE'::transaction_type, 'PLOT'::property_type, 'AVAILABLE'::property_status,
+   'Residential Plot, Ghodbunder Road', 'Corner plot facing main road, ready for construction.',
+   18000000::numeric, 17000000::numeric, 18000000::numeric, 'Near Hiranandani Estate, Ghodbunder Road', 'Ghodbunder Road', 'Thane', 'Maharashtra', '400615',
+   19.2471, 72.9802, null, null, null, 3000::numeric,
+   'Manoj Desai', '+919821110023', null, null),
+
+  ('SALE'::transaction_type, 'FLAT'::property_type, 'HOLD'::property_status,
+   '3 BHK Apartment, Pokhran Road', 'Premium 3 BHK, under negotiation with another buyer.',
+   17500000::numeric, 16800000::numeric, 17500000::numeric, 'Near Viviana Mall, Pokhran Road No 2', 'Pokhran Road', 'Thane', 'Maharashtra', '400610',
+   19.2083, 72.9820, 3, 3, 2, 1500::numeric,
+   'Ritu Khanna', '+919821110024', null, 'Token received from another party, hold for now.')
+) as v(
+  transaction_type, property_type, status, title, description, price,
+  negotiation_min, negotiation_max, address, locality, city, state, postal_code,
+  latitude, longitude, bedrooms, bathrooms, parking, area_sqft,
+  owner_name, owner_phone, owner_email, internal_notes
+)
+where not exists (
+  select 1 from properties p where p.title = v.title and p.locality = v.locality
+);
+
+-- ---------------------------------------------------------------------------
+-- Dummy photos for every property that doesn't have any yet (deterministic
+-- placeholder images keyed off property_code, so re-running this is a no-op
+-- for properties that already have media).
+-- ---------------------------------------------------------------------------
+insert into property_media (property_id, media_type, storage_path, is_cover, sort_order)
+select p.id, 'IMAGE', 'https://picsum.photos/seed/' || p.property_code || '-' || gs || '/900/675', (gs = 1), gs
+from properties p, generate_series(1, 4) as gs
+where not exists (select 1 from property_media pm where pm.property_id = p.id);
+
+-- ---------------------------------------------------------------------------
+-- A few more customers/leads covering other roles (tenant, broker, builder)
+-- ---------------------------------------------------------------------------
+do $$
+declare
+  v_admin uuid;
+  v_staff uuid;
+  v_cust uuid;
+  v_prop uuid;
+begin
+  select id into v_admin from staff_profiles where full_name = 'Anita Deshpande';
+  select id into v_staff from staff_profiles where full_name = 'Rohit Kadam';
+
+  if not exists (select 1 from customers where phone = '+919920001004') then
+    select id into v_prop from properties where title = '2 BHK for Rent, Manpada';
+    insert into customers (full_name, phone, whatsapp, email, notes, lead_status, created_by)
+    values ('Sneha Pillai', '+919920001004', '+919920001004', 'sneha.pillai@example.com',
+            'Looking to rent a 2 BHK near Manpada for her family.', 'NEW_LEAD', v_admin)
+    returning id into v_cust;
+    insert into customer_roles (customer_id, role) values (v_cust, 'TENANT');
+    insert into leads (customer_id, property_id, source, landing_page, message)
+    values (v_cust, v_prop, 'WEBSITE', '/property/manpada-2bhk-rent', 'Can I schedule a visit this weekend?');
+  end if;
+
+  if not exists (select 1 from customers where phone = '+919920001005') then
+    insert into customers (full_name, phone, whatsapp, email, notes, lead_status, created_by)
+    values ('Vikram Chodankar', '+919920001005', '+919920001005', 'vikram.broker@example.com',
+            'Local broker, frequently brings buyers for Thane West and Majiwada listings.', 'ACTIVE', v_staff)
+    returning id into v_cust;
+    insert into customer_roles (customer_id, role) values (v_cust, 'BROKER');
+  end if;
+
+  if not exists (select 1 from customers where phone = '+919920001006') then
+    insert into customers (full_name, phone, whatsapp, email, notes, lead_status, created_by)
+    values ('Meera Constructions', '+919920001006', '+919920001006', 'contact@meeraconstructions.example',
+            'Local builder, potential source for new plot/villa inventory in Kasarvadavali.', 'CONTACTED', v_staff)
+    returning id into v_cust;
+    insert into customer_roles (customer_id, role) values (v_cust, 'BUILDER');
+  end if;
+
+  if not exists (select 1 from customers where phone = '+919920001007') then
+    select id into v_prop from properties where title = 'Shop, Thane West';
+    insert into customers (full_name, phone, whatsapp, email, notes, lead_status, created_by)
+    values ('Farhan Sheikh', '+919920001007', '+919920001007', null,
+            'Interested in the Thane West shop for a retail business.', 'NEW_LEAD', v_admin)
+    returning id into v_cust;
+    insert into customer_roles (customer_id, role) values (v_cust, 'BUYER');
+    insert into leads (customer_id, property_id, source, message)
+    values (v_cust, v_prop, 'WALK_IN', 'Walked into the office asking about commercial shops.');
+  end if;
+end $$;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getInternalProperties, type PropertyStatus } from "@realestate/core";
+import { getCoverImagesByPropertyId, getInternalProperties, type PropertyStatus } from "@realestate/core";
 import { getServerSupabase } from "@/lib/supabase";
 import { formatPriceINR } from "@/lib/format";
 
@@ -24,6 +24,7 @@ export default async function PropertiesPage({
     status: (searchParams.status as PropertyStatus) || undefined,
     pageSize: 50,
   });
+  const coverImages = await getCoverImagesByPropertyId(supabase, properties.items.map((p) => p.id));
 
   return (
     <div className="space-y-6">
@@ -52,14 +53,24 @@ export default async function PropertiesPage({
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {properties.items.map((p) => (
-            <Link key={p.id} href={`/properties/${p.id}`} className="card p-4 transition hover:shadow-md">
-              <div className="flex items-start justify-between gap-2">
-                <span className="font-mono text-xs text-ink-400">{p.property_code}</span>
-                <span className={`badge ${STATUS_STYLES[p.status]}`}>{p.status}</span>
+            <Link key={p.id} href={`/properties/${p.id}`} className="card overflow-hidden transition hover:shadow-md">
+              <div className="aspect-[4/3] bg-ink-100">
+                {coverImages[p.id] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={coverImages[p.id]} alt={p.title} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-xs text-ink-400">No photo yet</div>
+                )}
               </div>
-              <h3 className="mt-2 font-medium text-ink-900">{p.title}</h3>
-              <p className="text-sm text-ink-500">{p.locality}, {p.city}</p>
-              <p className="mt-2 text-lg font-semibold text-ink-900">{formatPriceINR(p.price)}</p>
+              <div className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="font-mono text-xs text-ink-400">{p.property_code}</span>
+                  <span className={`badge ${STATUS_STYLES[p.status]}`}>{p.status}</span>
+                </div>
+                <h3 className="mt-2 font-medium text-ink-900">{p.title}</h3>
+                <p className="text-sm text-ink-500">{p.locality}, {p.city}</p>
+                <p className="mt-2 text-lg font-semibold text-ink-900">{formatPriceINR(p.price)}</p>
+              </div>
             </Link>
           ))}
         </div>

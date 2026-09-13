@@ -56,10 +56,26 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                 Photos coming soon
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
-                {media.slice(0, 6).map((m) => (
-                  <div key={m.id} className="aspect-square bg-brand-200/60" />
-                ))}
+              <div className="space-y-1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={media[0].storage_path}
+                  alt={property.title}
+                  className="aspect-video w-full object-cover"
+                />
+                {media.length > 1 && (
+                  <div className="grid grid-cols-3 gap-1 sm:grid-cols-4">
+                    {media.slice(1, 5).map((m) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={m.id}
+                        src={m.storage_path}
+                        alt={property.title}
+                        className="aspect-square w-full object-cover"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  getCoverImagesByPropertyId,
   getPropertiesWithinRadius,
   searchProperties,
   type PropertyType,
@@ -65,6 +66,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     total = result.total;
   }
 
+  const coverImages = await getCoverImagesByPropertyId(supabase, items.map((p) => p.id));
   const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
 
   return (
@@ -88,7 +90,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((p) => (
-              <PropertyCard key={p.id} property={p} />
+              <PropertyCard key={p.id} property={p} imageUrl={coverImages[p.id]} />
             ))}
           </div>
         )}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getFeaturedProperties, searchProperties } from "@realestate/core";
+import { getCoverImagesByPropertyId, getFeaturedProperties, searchProperties } from "@realestate/core";
 import { getServerSupabase } from "@/lib/supabase";
 import { HeroSearch } from "@/components/HeroSearch";
 import { PropertyCard } from "@/components/PropertyCard";
@@ -12,6 +12,10 @@ export default async function HomePage() {
   const [featured, recent] = await Promise.all([
     getFeaturedProperties(supabase, 6),
     searchProperties(supabase, { page: 1, pageSize: 6, sort: "newest" }),
+  ]);
+  const coverImages = await getCoverImagesByPropertyId(supabase, [
+    ...featured.map((p) => p.id),
+    ...recent.items.map((p) => p.id),
   ]);
 
   return (
@@ -57,7 +61,7 @@ export default async function HomePage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((p) => (
-              <PropertyCard key={p.id} property={p} />
+              <PropertyCard key={p.id} property={p} imageUrl={coverImages[p.id]} />
             ))}
           </div>
         )}
@@ -78,7 +82,7 @@ export default async function HomePage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {recent.items.map((p) => (
-              <PropertyCard key={p.id} property={p} />
+              <PropertyCard key={p.id} property={p} imageUrl={coverImages[p.id]} />
             ))}
           </div>
         )}
