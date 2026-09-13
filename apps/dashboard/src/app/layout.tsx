@@ -3,10 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Thane Realty — Staff Dashboard",
+    default: "Gayatri Properties — Staff Dashboard",
     template: "%s | Staff Dashboard",
   },
-  description: "Internal dashboard for Thane Realty staff.",
+  description: "Internal dashboard for Gayatri Properties staff.",
   robots: { index: false, follow: false },
 };
 

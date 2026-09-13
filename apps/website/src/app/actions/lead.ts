@@ -1,7 +1,7 @@
 "use server";
 
 import { createPublicLead, isPlausiblePhone, toE164IndiaDefault } from "@realestate/core";
-import { getServerSupabase } from "@/lib/supabase";
+import { getServerSupabase } from "@/lib/supabaseServer";
 
 export interface SubmitLeadState {
   status: "idle" | "success" | "error";
@@ -22,6 +22,10 @@ export async function submitLeadAction(
   const phoneRaw = String(formData.get("phone") ?? "").trim();
   const propertyId = String(formData.get("propertyId") ?? "") || null;
   const landingPage = String(formData.get("landingPage") ?? "") || null;
+  const rawSource = String(formData.get("source") ?? "WEBSITE");
+  // Only these two sources originate from the public site itself (spec §14) — anything
+  // else falls back to WEBSITE rather than trusting an arbitrary client-supplied value.
+  const source = rawSource === "QR_CODE" ? "QR_CODE" : "WEBSITE";
 
   if (fullName.length < 2) {
     return { status: "error", message: "Please enter your name." };
@@ -38,7 +42,7 @@ export async function submitLeadAction(
       fullName,
       phone,
       propertyId,
-      source: "WEBSITE",
+      source,
       landingPage,
     });
     return {

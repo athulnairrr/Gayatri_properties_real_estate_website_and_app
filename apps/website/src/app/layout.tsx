@@ -6,8 +6,8 @@ import { LeadCaptureProvider } from "@/components/LeadCaptureProvider";
 
 export const metadata: Metadata = {
   title: {
-    default: "Thane Realty — Find Your Next Property",
-    template: "%s | Thane Realty",
+    default: "Gayatri Properties — Find Your Next Property",
+    template: "%s | Gayatri Properties",
   },
   description:
     "Buy or rent apartments, villas, plots and commercial spaces across Thane — Vasant Vihar, Manpada, Majiwada, Ghodbunder Road and nearby areas.",

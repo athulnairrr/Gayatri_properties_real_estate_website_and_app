@@ -21,6 +21,7 @@ interface LeadCaptureModalProps {
   propertyId?: string | null;
   propertyLabel?: string | null;
   headline?: string;
+  source?: "WEBSITE" | "QR_CODE";
 }
 
 export function LeadCaptureModal({
@@ -29,6 +30,7 @@ export function LeadCaptureModal({
   propertyId,
   propertyLabel,
   headline,
+  source = "WEBSITE",
 }: LeadCaptureModalProps) {
   const [state, formAction] = useFormState(submitLeadAction, initialState);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -94,6 +96,7 @@ export function LeadCaptureModal({
 
             <form action={formAction} className="space-y-4">
               <input type="hidden" name="propertyId" value={propertyId ?? ""} />
+              <input type="hidden" name="source" value={source} />
               <input
                 type="hidden"
                 name="landingPage"

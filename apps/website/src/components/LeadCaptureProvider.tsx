@@ -7,6 +7,7 @@ interface OpenOptions {
   propertyId?: string | null;
   propertyLabel?: string | null;
   headline?: string;
+  source?: "WEBSITE" | "QR_CODE";
 }
 
 interface LeadCaptureContextValue {
@@ -16,7 +17,9 @@ interface LeadCaptureContextValue {
 const LeadCaptureContext = createContext<LeadCaptureContextValue | null>(null);
 
 const ENGAGEMENT_DELAY_MS = 30_000;
-const SESSION_PROMPTED_KEY = "tr_lead_prompted"; // avoid repeatedly interrupting the same session
+// Exported so a QR-scan auto-open (see QrScanCapture) can mark the session as "already
+// prompted" too, avoiding the 30s engagement timer popping the modal open a second time.
+export const SESSION_PROMPTED_KEY = "tr_lead_prompted";
 const SUBMITTED_KEY = "tr_lead_submitted"; // avoid ever prompting again once they've converted
 
 export function LeadCaptureProvider({ children }: { children: React.ReactNode }) {
@@ -64,6 +67,7 @@ export function LeadCaptureProvider({ children }: { children: React.ReactNode })
         propertyId={opts.propertyId}
         propertyLabel={opts.propertyLabel}
         headline={opts.headline}
+        source={opts.source}
       />
     </LeadCaptureContext.Provider>
   );

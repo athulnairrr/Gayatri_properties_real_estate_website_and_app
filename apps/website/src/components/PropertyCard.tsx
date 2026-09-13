@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { PublicProperty, PropertyRadiusResult } from "@realestate/core";
 import { formatPriceINR, propertyTypeLabel, transactionLabel } from "@/lib/format";
+import { PropertyImageCarousel } from "./PropertyImageCarousel";
+import { WishlistButton } from "./WishlistButton";
 
 type CardProperty = PublicProperty | PropertyRadiusResult;
 
@@ -14,10 +16,10 @@ function specsLine(p: CardProperty): string {
 
 export function PropertyCard({
   property,
-  imageUrl,
+  images = [],
 }: {
   property: CardProperty;
-  imageUrl?: string;
+  images?: string[];
 }) {
   const distance = "distance_km" in property ? property.distance_km : undefined;
 
@@ -27,22 +29,15 @@ export function PropertyCard({
       className="group block overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-card transition hover:-translate-y-0.5 hover:shadow-lg"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-brand-100 to-sand-100">
-        {imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imageUrl}
-            alt={property.title}
-            loading="lazy"
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-sm text-brand-400">No photo yet</div>
-        )}
+        <PropertyImageCarousel images={images} alt={property.title} />
         <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-brand-800">
           {transactionLabel(property.transaction_type)}
         </span>
+        <div className="absolute right-3 top-3">
+          <WishlistButton propertyCode={property.property_code} />
+        </div>
         {distance != null && (
-          <span className="absolute right-3 top-3 rounded-full bg-brand-900/80 px-3 py-1 text-xs font-medium text-white">
+          <span className="absolute bottom-3 left-3 rounded-full bg-brand-900/80 px-3 py-1 text-xs font-medium text-white">
             {distance} km away
           </span>
         )}

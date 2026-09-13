@@ -46,9 +46,9 @@ export function DashboardNav({ staff }: { staff: StaffProfile }) {
       <div className="flex items-center justify-between border-b border-ink-100 bg-white px-4 py-3 lg:hidden">
         <div className="flex items-center gap-2 font-semibold text-ink-900">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-900 text-xs text-white">
-            TR
+            GP
           </span>
-          Thane Realty
+          Gayatri Properties
         </div>
         <button
           type="button"
@@ -71,9 +71,9 @@ export function DashboardNav({ staff }: { staff: StaffProfile }) {
       <aside className="hidden w-64 shrink-0 flex-col border-r border-ink-100 bg-white lg:flex">
         <div className="flex items-center gap-2 px-5 py-5 font-semibold text-ink-900">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-900 text-sm text-white">
-            TR
+            GP
           </span>
-          Thane Realty
+          Gayatri Properties
         </div>
         {links}
         <div className="border-t border-ink-100 p-4">

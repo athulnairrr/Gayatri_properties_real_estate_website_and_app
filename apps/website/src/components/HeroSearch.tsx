@@ -16,6 +16,10 @@ export function HeroSearch() {
     params.set("transactionType", transactionType);
     if (propertyType) params.set("propertyType", propertyType);
     router.push(`/properties?${params.toString()}`);
+    // Belt-and-braces against the client Router Cache serving a stale, unfiltered
+    // /properties render (a known App Router gotcha when the route was prefetched
+    // without these query params) — force the destination to refetch.
+    router.refresh();
   }
 
   return (

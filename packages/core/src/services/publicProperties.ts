@@ -82,6 +82,21 @@ export async function getFeaturedProperties(
   return (data ?? []) as PublicProperty[];
 }
 
+/** Batch lookup for the wishlist page — fetches only the specific properties a visitor
+ * saved (by code), never the whole table. */
+export async function getPublicPropertiesByCodes(
+  client: SupabaseClient,
+  propertyCodes: string[]
+): Promise<PublicProperty[]> {
+  if (propertyCodes.length === 0) return [];
+  const { data, error } = await client
+    .from("public_properties")
+    .select("*")
+    .in("property_code", propertyCodes);
+  if (error) throw error;
+  return (data ?? []) as PublicProperty[];
+}
+
 export async function getPublicPropertyByCode(
   client: SupabaseClient,
   propertyCode: string

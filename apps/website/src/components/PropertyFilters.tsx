@@ -25,6 +25,7 @@ export function PropertyFilters() {
     }
     params.delete("page");
     router.push(`/properties?${params.toString()}`);
+    router.refresh();
   }
 
   function handleLocalitySelect(label: string) {

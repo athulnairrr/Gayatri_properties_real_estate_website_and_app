@@ -14,7 +14,7 @@ export function PropertyContactActions({
   const { openLeadCapture } = useLeadCapture();
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div className="flex flex-col gap-3">
       <button
         type="button"
         onClick={() =>
@@ -24,21 +24,23 @@ export function PropertyContactActions({
             headline: "Interested in this property?",
           })
         }
-        className="btn-primary flex-1"
+        className="btn-primary w-full"
       >
         Contact About This Property
       </button>
-      <a href={telHref(FIRM_PHONE)} className="btn-secondary flex-1">
-        Call
-      </a>
-      <a
-        href={whatsappHref(FIRM_WHATSAPP, `Hi, I'm interested in ${propertyLabel}.`)}
-        target="_blank"
-        rel="noreferrer"
-        className="btn-secondary flex-1"
-      >
-        WhatsApp
-      </a>
+      <div className="grid grid-cols-2 gap-3">
+        <a href={telHref(FIRM_PHONE)} className="btn-secondary">
+          Call
+        </a>
+        <a
+          href={whatsappHref(FIRM_WHATSAPP, `Hi, I'm interested in ${propertyLabel}.`)}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-secondary"
+        >
+          WhatsApp
+        </a>
+      </div>
     </div>
   );
 }

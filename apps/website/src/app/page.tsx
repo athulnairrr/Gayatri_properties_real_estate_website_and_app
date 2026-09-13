@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { getCoverImagesByPropertyId, getFeaturedProperties, searchProperties } from "@realestate/core";
-import { getServerSupabase } from "@/lib/supabase";
+import { getAllImagesByPropertyId, getFeaturedProperties, searchProperties } from "@realestate/core";
+import { getServerSupabase } from "@/lib/supabaseServer";
 import { HeroSearch } from "@/components/HeroSearch";
 import { PropertyCard } from "@/components/PropertyCard";
 import { ContactCta } from "@/components/ContactCta";
@@ -13,7 +13,7 @@ export default async function HomePage() {
     getFeaturedProperties(supabase, 6),
     searchProperties(supabase, { page: 1, pageSize: 6, sort: "newest" }),
   ]);
-  const coverImages = await getCoverImagesByPropertyId(supabase, [
+  const propertyImages = await getAllImagesByPropertyId(supabase, [
     ...featured.map((p) => p.id),
     ...recent.items.map((p) => p.id),
   ]);
@@ -61,7 +61,7 @@ export default async function HomePage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((p) => (
-              <PropertyCard key={p.id} property={p} imageUrl={coverImages[p.id]} />
+              <PropertyCard key={p.id} property={p} images={propertyImages[p.id] ?? []} />
             ))}
           </div>
         )}
@@ -71,7 +71,7 @@ export default async function HomePage() {
         <div className="mb-8 flex items-end justify-between">
           <div>
             <h2 className="font-serif text-2xl font-semibold text-brand-950">Recently Added</h2>
-            <p className="mt-1 text-sm text-brand-500">The newest listings on Thane Realty.</p>
+            <p className="mt-1 text-sm text-brand-500">The newest listings on Gayatri Properties.</p>
           </div>
           <Link href="/properties" className="hidden text-sm font-medium text-brand-700 hover:underline sm:block">
             View all properties →
@@ -82,7 +82,7 @@ export default async function HomePage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {recent.items.map((p) => (
-              <PropertyCard key={p.id} property={p} imageUrl={coverImages[p.id]} />
+              <PropertyCard key={p.id} property={p} images={propertyImages[p.id] ?? []} />
             ))}
           </div>
         )}

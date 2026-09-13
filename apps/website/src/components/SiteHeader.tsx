@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { WishlistNavLink } from "./WishlistNavLink";
 
 const NAV_LINKS = [
   { href: "/properties?transactionType=SALE", label: "Buy" },
@@ -11,6 +12,11 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
+// Prefetch is disabled for every /properties variant: Next.js's client Router Cache keys
+// prefetched entries loosely enough that visiting one filtered link after hovering/prefetching
+// another can serve stale, wrongly-filtered results. Search correctness matters more here
+// than the small prefetch speed gain.
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
@@ -19,9 +25,9 @@ export function SiteHeader() {
       <div className="container-page flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-serif text-xl font-semibold text-brand-900">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-800 text-sm text-white">
-            TR
+            GP
           </span>
-          Thane Realty
+          Gayatri Properties
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -29,11 +35,13 @@ export function SiteHeader() {
             <Link
               key={link.label}
               href={link.href}
+              prefetch={false}
               className="text-sm font-medium text-brand-700 transition hover:text-brand-950"
             >
               {link.label}
             </Link>
           ))}
+          <WishlistNavLink />
         </nav>
 
         <div className="hidden md:block">
@@ -64,12 +72,14 @@ export function SiteHeader() {
               <Link
                 key={link.label}
                 href={link.href}
+                prefetch={false}
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-3 py-3 text-base font-medium text-brand-800 hover:bg-brand-50"
               >
                 {link.label}
               </Link>
             ))}
+            <WishlistNavLink mobile />
             <Link
               href="/contact"
               onClick={() => setOpen(false)}

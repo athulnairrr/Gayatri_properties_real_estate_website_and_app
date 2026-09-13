@@ -28,7 +28,7 @@ export default function ContactPage() {
 
       <div className="mt-10 text-sm text-brand-500">
         <p>Vasant Vihar, Thane West, Maharashtra 400606</p>
-        <p>hello@thanerealty.example</p>
+        <p>hello@gayatriproperties.example</p>
       </div>
     </div>
   );

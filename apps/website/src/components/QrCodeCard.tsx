@@ -5,16 +5,20 @@ import { generateQrDataUrl } from "@realestate/core";
 
 export function QrCodeCard({ url }: { url: string }) {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
+  // The QR still points at the same stable property URL (spec: never encode data into
+  // it) — src=qr is just a tag so the page knows to skip straight to the quick phone
+  // capture instead of waiting 30s, and so the resulting lead is recorded as QR_CODE.
+  const qrTargetUrl = `${url}${url.includes("?") ? "&" : "?"}src=qr`;
 
   useEffect(() => {
     let cancelled = false;
-    generateQrDataUrl(url, 240).then((d) => {
+    generateQrDataUrl(qrTargetUrl, 240).then((d) => {
       if (!cancelled) setDataUrl(d);
     });
     return () => {
       cancelled = true;
     };
-  }, [url]);
+  }, [qrTargetUrl]);
 
   return (
     <div className="flex items-center gap-4 rounded-2xl border border-brand-100 bg-white p-5 shadow-card">
@@ -27,10 +31,11 @@ export function QrCodeCard({ url }: { url: string }) {
         )}
       </div>
       <div>
-        <p className="text-sm font-semibold text-brand-900">Scan to share this listing</p>
+        <p className="text-sm font-semibold text-brand-900">Print this QR for boards &amp; flyers</p>
         <p className="mt-1 text-xs text-brand-500">
-          Use this on flyers, boards or brochures — it always points to this property&apos;s page,
-          even if the details change later.
+          A visitor who scans it lands on this listing and is immediately asked for just their
+          name and phone number — no browsing required. That enquiry appears in your dashboard
+          tagged &ldquo;QR Code&rdquo; with this property already attached.
         </p>
       </div>
     </div>

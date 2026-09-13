@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getPropertyMedia, getPublicPropertyByCode } from "@realestate/core";
-import { getServerSupabase } from "@/lib/supabase";
+import { getServerSupabase } from "@/lib/supabaseServer";
 import { formatPriceINR, propertyTypeLabel, transactionLabel } from "@/lib/format";
 import { PropertyContactActions } from "@/components/PropertyContactActions";
 import { QrCodeCard } from "@/components/QrCodeCard";
+import { QrScanCapture } from "@/components/QrScanCapture";
+import { WishlistButton } from "@/components/WishlistButton";
 import { env } from "@/lib/env";
 
 interface PageProps {
@@ -41,6 +44,9 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
   return (
     <div className="container-page py-10">
+      <Suspense>
+        <QrScanCapture propertyId={property.id} propertyLabel={property.title} />
+      </Suspense>
       <nav className="mb-4 text-sm text-brand-500">
         <a href="/properties" className="hover:underline">
           Properties
@@ -144,8 +150,9 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           <div className="rounded-2xl border border-brand-100 bg-white p-5 shadow-card">
             <p className="text-sm text-brand-500">Property Code</p>
             <p className="font-mono text-lg font-semibold text-brand-900">{property.property_code}</p>
-            <div className="mt-4">
+            <div className="mt-4 space-y-3">
               <PropertyContactActions propertyId={property.id} propertyLabel={property.title} />
+              <WishlistButton propertyCode={property.property_code} variant="full" />
             </div>
           </div>
 

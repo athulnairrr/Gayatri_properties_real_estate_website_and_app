@@ -2,13 +2,13 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  getCoverImagesByPropertyId,
+  getAllImagesByPropertyId,
   getPropertiesWithinRadius,
   searchProperties,
   type PropertyType,
   type TransactionType,
 } from "@realestate/core";
-import { getServerSupabase } from "@/lib/supabase";
+import { getServerSupabase } from "@/lib/supabaseServer";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyFilters } from "@/components/PropertyFilters";
 
@@ -16,6 +16,13 @@ export const metadata: Metadata = {
   title: "Properties for Sale & Rent in Thane",
   description: "Browse apartments, villas, plots and commercial properties across Thane.",
 };
+
+// This page reads searchParams on every request already (so it's dynamic by nature), but
+// force it explicitly — otherwise a client-side navigation here from a Link that was
+// prefetched without query params (e.g. the "Properties" nav link) can serve a stale,
+// unfiltered Router Cache entry instead of re-running the search.
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 interface PageProps {
   searchParams: Record<string, string | undefined>;
@@ -66,7 +73,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     total = result.total;
   }
 
-  const coverImages = await getCoverImagesByPropertyId(supabase, items.map((p) => p.id));
+  const propertyImages = await getAllImagesByPropertyId(supabase, items.map((p) => p.id));
   const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
 
   return (
@@ -90,7 +97,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((p) => (
-              <PropertyCard key={p.id} property={p} imageUrl={coverImages[p.id]} />
+              <PropertyCard key={p.id} property={p} images={propertyImages[p.id] ?? []} />
             ))}
           </div>
         )}

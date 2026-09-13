@@ -69,7 +69,7 @@ export default async function DashboardPage() {
                   <CallButton phone={lead.customer.phone} />
                   <WhatsAppButton
                     phone={lead.customer.whatsapp ?? lead.customer.phone}
-                    message={`Hi ${lead.customer.full_name}, this is Thane Realty regarding your enquiry.`}
+                    message={`Hi ${lead.customer.full_name}, this is Gayatri Properties regarding your enquiry.`}
                   />
                   <Link href={`/leads/${lead.customer.id}`} className="btn-secondary px-3 py-1.5 text-xs">
                     View
