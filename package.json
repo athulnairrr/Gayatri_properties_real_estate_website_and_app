@@ -1,0 +1,18 @@
+{
+  "name": "real-estate-platform",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "db:migrate": "npm run migrate -w @realestate/db",
+    "db:seed": "npm run seed -w @realestate/db",
+    "dev:website": "npm run dev -w @realestate/website",
+    "dev:dashboard": "npm run dev -w @realestate/dashboard",
+    "build:core": "npm run build -w @realestate/core",
+    "build:website": "npm run build -w @realestate/website",
+    "build:dashboard": "npm run build -w @realestate/dashboard"
+  }
+}
