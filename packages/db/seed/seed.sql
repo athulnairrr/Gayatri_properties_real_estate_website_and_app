@@ -9,16 +9,33 @@ declare
   v_admin_id uuid;
   v_staff_id uuid;
 begin
+  -- IMPORTANT: GoTrue (Supabase Auth) requires several *_token columns to be '' rather
+  -- than NULL — leaving them NULL causes login to fail with a generic
+  -- "Database error querying schema" 500 (GoTrue scans them into non-nullable Go
+  -- strings). It also requires a matching auth.identities row for password sign-in.
+  -- Both are easy to miss when hand-seeding auth.users directly, as we do here for
+  -- dev-only accounts. Discovered and fixed 2026-09-13 after this exact seed shipped
+  -- with logins that looked right but couldn't actually sign in.
   if not exists (select 1 from auth.users where email = 'admin@thanerealty.dev') then
     insert into auth.users (
       instance_id, id, aud, role, email, encrypted_password,
-      email_confirmed_at, created_at, updated_at, raw_app_meta_data, raw_user_meta_data
+      email_confirmed_at, created_at, updated_at, raw_app_meta_data, raw_user_meta_data,
+      confirmation_token, recovery_token, email_change, email_change_token_new,
+      email_change_token_current, phone_change, phone_change_token, reauthentication_token
     ) values (
       '00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated',
       'admin@thanerealty.dev', crypt('DevAdmin123!', gen_salt('bf')),
-      now(), now(), now(), '{"provider":"email","providers":["email"]}', '{}'
+      now(), now(), now(), '{"provider":"email","providers":["email"]}', '{}',
+      '', '', '', '', '', '', '', ''
     )
     returning id into v_admin_id;
+
+    insert into auth.identities (id, provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+    values (
+      gen_random_uuid(), v_admin_id::text, v_admin_id,
+      jsonb_build_object('sub', v_admin_id::text, 'email', 'admin@thanerealty.dev', 'email_verified', true, 'phone_verified', false),
+      'email', now(), now(), now()
+    );
 
     insert into staff_profiles (user_id, full_name, role, phone)
     values (v_admin_id, 'Anita Deshpande', 'ADMIN', '+919820000001');
@@ -27,13 +44,23 @@ begin
   if not exists (select 1 from auth.users where email = 'staff@thanerealty.dev') then
     insert into auth.users (
       instance_id, id, aud, role, email, encrypted_password,
-      email_confirmed_at, created_at, updated_at, raw_app_meta_data, raw_user_meta_data
+      email_confirmed_at, created_at, updated_at, raw_app_meta_data, raw_user_meta_data,
+      confirmation_token, recovery_token, email_change, email_change_token_new,
+      email_change_token_current, phone_change, phone_change_token, reauthentication_token
     ) values (
       '00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated',
       'staff@thanerealty.dev', crypt('DevStaff123!', gen_salt('bf')),
-      now(), now(), now(), '{"provider":"email","providers":["email"]}', '{}'
+      now(), now(), now(), '{"provider":"email","providers":["email"]}', '{}',
+      '', '', '', '', '', '', '', ''
     )
     returning id into v_staff_id;
+
+    insert into auth.identities (id, provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+    values (
+      gen_random_uuid(), v_staff_id::text, v_staff_id,
+      jsonb_build_object('sub', v_staff_id::text, 'email', 'staff@thanerealty.dev', 'email_verified', true, 'phone_verified', false),
+      'email', now(), now(), now()
+    );
 
     insert into staff_profiles (user_id, full_name, role, phone)
     values (v_staff_id, 'Rohit Kadam', 'STAFF', '+919820000002');

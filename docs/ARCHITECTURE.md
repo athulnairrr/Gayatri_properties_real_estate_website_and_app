@@ -120,3 +120,23 @@ Per spec §42/§43: no OTP/SMS (explicitly deferred, `phone_verified` boolean + 
 timestamp reserved on `leads`/`customers` for later), no realtime subscriptions (dashboard polls/re-fetches
 on demand), no edge functions (one Postgres `SECURITY DEFINER` function covers the public-lead-insert
 need), no audit-log table yet (created_by/updated_by columns are the seed for one later).
+
+## 11. Known gotcha: hand-seeding Supabase Auth users
+
+The dev seed (`packages/db/seed/seed.sql`) creates the two dev staff logins by inserting
+directly into `auth.users`/`auth.identities` rather than through the Auth API (no service-role
+key is used anywhere in the seed/migration scripts). Two things are easy to miss doing this,
+and both cause login to fail with a generic `500 "Database error querying schema"` from GoTrue
+that gives no indication of the real cause:
+
+1. **`auth.identities` needs a matching row per user** (provider `email`, `provider_id` = the
+   user's id) — without it, password sign-in fails outright.
+2. **Several `auth.users` token columns must be `''`, not `NULL`**: `confirmation_token`,
+   `recovery_token`, `email_change`, `email_change_token_new`, `email_change_token_current`,
+   `phone_change`, `phone_change_token`, `reauthentication_token`. GoTrue's Go code scans these
+   into non-nullable strings; a `NULL` there breaks the scan for *that user specifically* (other
+   logins keep working fine, which makes it easy to misdiagnose as account-specific).
+
+Both are handled in the current seed script. If you ever hand-insert another Auth user directly
+via SQL, replicate both of these — or better, create the user through the Auth Admin API
+(`service_role` key, server-side only) instead, which handles this correctly by construction.
