@@ -78,15 +78,15 @@ export default async function CalendarPage({
               <div className="space-y-2">
                 {dayVisits.map((v: any) => (
                   <div key={v.id} className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-ink-900">
+                    <div className="min-w-0">
+                      <p className="break-words text-sm font-medium text-ink-900">
                         {formatDateTime(v.scheduled_at)} — {v.customer?.full_name}
                       </p>
-                      <p className="text-sm text-ink-500">
+                      <p className="break-words text-sm text-ink-500">
                         {v.property?.property_code} — {v.property?.title}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex shrink-0 flex-wrap items-center gap-2">
                       <span className={`badge ${STATUS_STYLES[v.status] ?? ""}`}>{v.status}</span>
                       {v.customer?.phone && <CallButton phone={v.customer.phone} />}
                       {v.customer?.phone && <WhatsAppButton phone={v.customer.phone} />}

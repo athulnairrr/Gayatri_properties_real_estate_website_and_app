@@ -104,7 +104,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
       </div>
 
       {!isRadiusSearch && totalPages > 1 && (
-        <nav className="mt-10 flex items-center justify-center gap-2">
+        <nav className="mt-10 flex flex-wrap items-center justify-center gap-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
             const params = new URLSearchParams(
               Object.entries(searchParams).filter(([, v]) => v) as [string, string][]

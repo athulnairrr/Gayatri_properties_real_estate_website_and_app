@@ -30,9 +30,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex min-h-screen">
+    // Column on mobile (top bar above content), row on desktop (sidebar beside content).
+    <div className="flex min-h-screen flex-col lg:flex-row">
       <DashboardNav staff={staff} />
-      <main className="flex-1 overflow-x-hidden">
+      <main className="min-w-0 flex-1 overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
       </main>
     </div>

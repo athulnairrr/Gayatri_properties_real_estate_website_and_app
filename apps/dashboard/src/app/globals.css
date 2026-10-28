@@ -23,7 +23,8 @@ body {
 }
 
 .input-field {
-  @apply w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-ink-500 focus:outline-none focus:ring-1 focus:ring-ink-500;
+  /* 16px on phones — iOS Safari zooms the page when focusing an input smaller than that */
+  @apply w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-base text-ink-900 sm:text-sm placeholder:text-ink-400 focus:border-ink-500 focus:outline-none focus:ring-1 focus:ring-ink-500;
 }
 
 .badge {

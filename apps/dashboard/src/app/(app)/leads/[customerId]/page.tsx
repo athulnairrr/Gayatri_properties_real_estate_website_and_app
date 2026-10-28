@@ -29,8 +29,8 @@ export default async function LeadDetailPage({ params }: { params: { customerId:
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-ink-900">{customer.full_name}</h1>
+        <div className="min-w-0">
+          <h1 className="break-words text-xl font-semibold text-ink-900">{customer.full_name}</h1>
           <p className="text-sm text-ink-500">
             {customer.customer_code} · {customer.phone}
             {!customer.phone_verified && " · phone unverified"}
@@ -72,7 +72,7 @@ export default async function LeadDetailPage({ params }: { params: { customerId:
             <pre className="mt-2 whitespace-pre-wrap rounded-lg bg-ink-50 p-3 text-sm text-ink-700">
               {customer.notes || "No notes yet."}
             </pre>
-            <form action={addNoteAction} className="mt-4 flex gap-2">
+            <form action={addNoteAction} className="mt-4 flex flex-col gap-2 sm:flex-row">
               <input type="hidden" name="customerId" value={customer.id} />
               <input
                 name="note"
@@ -123,21 +123,21 @@ export default async function LeadDetailPage({ params }: { params: { customerId:
           <div className="card p-5">
             <h2 className="text-sm font-semibold text-ink-900">Contact Details</h2>
             <dl className="mt-3 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-ink-400">Phone</dt>
-                <dd className="text-ink-800">{customer.phone}</dd>
+              <div className="flex justify-between gap-4">
+                <dt className="shrink-0 text-ink-400">Phone</dt>
+                <dd className="min-w-0 break-all text-right text-ink-800">{customer.phone}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-ink-400">WhatsApp</dt>
-                <dd className="text-ink-800">{customer.whatsapp ?? "—"}</dd>
+              <div className="flex justify-between gap-4">
+                <dt className="shrink-0 text-ink-400">WhatsApp</dt>
+                <dd className="min-w-0 break-all text-right text-ink-800">{customer.whatsapp ?? "—"}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-ink-400">Email</dt>
-                <dd className="text-ink-800">{customer.email ?? "—"}</dd>
+              <div className="flex justify-between gap-4">
+                <dt className="shrink-0 text-ink-400">Email</dt>
+                <dd className="min-w-0 break-all text-right text-ink-800">{customer.email ?? "—"}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-ink-400">Added</dt>
-                <dd className="text-ink-800">{formatDate(customer.created_at)}</dd>
+              <div className="flex justify-between gap-4">
+                <dt className="shrink-0 text-ink-400">Added</dt>
+                <dd className="min-w-0 text-right text-ink-800">{formatDate(customer.created_at)}</dd>
               </div>
             </dl>
           </div>

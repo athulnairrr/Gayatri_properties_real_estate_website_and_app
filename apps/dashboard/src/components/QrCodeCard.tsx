@@ -20,7 +20,7 @@ export function QrCodeCard({ url }: { url: string }) {
   }, [qrTargetUrl]);
 
   return (
-    <div className="card flex items-center gap-4 p-5">
+    <div className="card flex flex-col items-start gap-4 p-5 sm:flex-row sm:items-center">
       <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-ink-50">
         {dataUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -29,7 +29,7 @@ export function QrCodeCard({ url }: { url: string }) {
           <span className="text-xs text-ink-400">Generating…</span>
         )}
       </div>
-      <div>
+      <div className="min-w-0">
         <p className="text-sm font-semibold text-ink-900">Generate QR</p>
         <p className="mt-1 break-all text-xs text-ink-500">{url}</p>
         <p className="mt-1 text-xs text-ink-400">

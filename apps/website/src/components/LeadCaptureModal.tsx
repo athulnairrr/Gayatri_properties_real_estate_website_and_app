@@ -58,7 +58,7 @@ export function LeadCaptureModal({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        className="w-full max-w-md rounded-t-3xl bg-white p-6 shadow-card sm:rounded-3xl sm:p-8"
+        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white p-6 shadow-card sm:rounded-3xl sm:p-8"
       >
         {state.status === "success" ? (
           <div className="py-4 text-center">

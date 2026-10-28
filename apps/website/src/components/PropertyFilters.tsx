@@ -114,7 +114,7 @@ export function PropertyFilters() {
         <select
           defaultValue=""
           onChange={(e) => e.target.value && handleLocalitySelect(e.target.value)}
-          className="input-field w-auto min-w-[220px]"
+          className="input-field sm:w-auto sm:min-w-[220px]"
         >
           <option value="">Choose an area…</option>
           {THANE_LOCALITIES.map((loc) => (
@@ -128,7 +128,7 @@ export function PropertyFilters() {
           <select
             value={radiusKm || "5"}
             onChange={(e) => updateParams({ radiusKm: e.target.value })}
-            className="input-field w-auto"
+            className="input-field sm:w-auto"
           >
             {RADIUS_OPTIONS_KM.map((km) => (
               <option key={km} value={km}>
@@ -142,7 +142,7 @@ export function PropertyFilters() {
           type="button"
           onClick={useMyLocation}
           disabled={locating}
-          className="btn-secondary"
+          className="btn-secondary w-full sm:w-auto"
         >
           {locating ? "Locating…" : "Use my location"}
         </button>

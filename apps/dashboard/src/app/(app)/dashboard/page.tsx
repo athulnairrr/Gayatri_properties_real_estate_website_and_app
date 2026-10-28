@@ -23,7 +23,7 @@ export default async function DashboardPage() {
         <p className="text-sm text-ink-500">A snapshot of what needs your attention.</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="New Leads" value={counts.newLeads} tone="accent" />
         <StatCard label="Available Properties" value={counts.availableProperties} />
         <StatCard label="Today's Visits" value={counts.todaysVisits} />
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
                   </div>
                   <p className="text-sm text-ink-500">{lead.customer.phone} · {lead.source}</p>
                   {lead.property && (
-                    <p className="mt-1 text-sm text-ink-600">
+                    <p className="mt-1 break-words text-sm text-ink-600">
                       Interested in: <span className="font-medium">{lead.property.property_code}</span> —{" "}
                       {lead.property.title}
                     </p>

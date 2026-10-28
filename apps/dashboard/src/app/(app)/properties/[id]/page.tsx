@@ -18,8 +18,8 @@ export default async function EditPropertyPage({ params }: { params: { id: strin
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-ink-900">{property.title}</h1>
+        <div className="min-w-0">
+          <h1 className="break-words text-xl font-semibold text-ink-900">{property.title}</h1>
           <p className="font-mono text-sm text-ink-500">{property.property_code}</p>
         </div>
         <form action={archivePropertyAction} className="flex flex-wrap gap-2">

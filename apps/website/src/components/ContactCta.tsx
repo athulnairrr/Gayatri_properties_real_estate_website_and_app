@@ -8,7 +8,7 @@ export function ContactCta() {
   return (
     <section className="bg-brand-900">
       <div className="container-page flex flex-col items-center gap-6 py-16 text-center">
-        <h2 className="font-serif text-3xl font-semibold text-white">
+        <h2 className="font-serif text-2xl font-semibold text-white sm:text-3xl">
           Looking for the right property in Thane?
         </h2>
         <p className="max-w-xl text-brand-200">

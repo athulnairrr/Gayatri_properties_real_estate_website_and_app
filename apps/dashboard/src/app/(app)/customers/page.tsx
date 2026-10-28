@@ -22,7 +22,7 @@ export default async function CustomersPage({
         <p className="text-sm text-ink-500">Every buyer, tenant, owner and broker on file.</p>
       </div>
 
-      <form className="max-w-sm">
+      <form className="w-full sm:max-w-sm">
         <input
           type="search"
           name="q"
@@ -35,7 +35,34 @@ export default async function CustomersPage({
       {customers.items.length === 0 ? (
         <div className="card p-10 text-center text-sm text-ink-500">No customers found.</div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-ink-100 bg-white">
+        <>
+        {/* Phones: stacked cards instead of a sideways-scrolling table */}
+        <div className="space-y-3 md:hidden">
+          {customers.items.map((c) => (
+            <div key={c.id} className="card space-y-3 p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-medium text-ink-900">{c.full_name}</p>
+                  <p className="font-mono text-xs text-ink-400">{c.customer_code}</p>
+                </div>
+                <LeadStatusBadge status={c.lead_status} />
+              </div>
+              <div className="text-sm text-ink-600">
+                <p>{c.phone}</p>
+                {c.email && <p className="break-all">{c.email}</p>}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <CallButton phone={c.phone} />
+                <WhatsAppButton phone={c.whatsapp ?? c.phone} />
+                <Link href={`/leads/${c.id}`} className="btn-secondary px-3 py-1.5 text-xs">
+                  View
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden overflow-x-auto rounded-2xl border border-ink-100 bg-white md:block">
           <table className="w-full min-w-[640px] text-sm">
             <thead className="border-b border-ink-100 bg-ink-50 text-left text-xs uppercase tracking-wide text-ink-400">
               <tr>
@@ -71,6 +98,7 @@ export default async function CustomersPage({
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );

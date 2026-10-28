@@ -13,7 +13,7 @@ export function PropertyForm({
     <form action={action} className="space-y-6">
       {property && <input type="hidden" name="id" value={property.id} />}
 
-      <fieldset className="card space-y-4 p-5">
+      <fieldset className="card min-w-0 space-y-4 p-5">
         <legend className="px-1 text-sm font-semibold text-ink-900">Basics</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
@@ -67,7 +67,7 @@ export function PropertyForm({
         </label>
       </fieldset>
 
-      <fieldset className="card space-y-4 p-5">
+      <fieldset className="card min-w-0 space-y-4 p-5">
         <legend className="px-1 text-sm font-semibold text-ink-900">Pricing</legend>
         <div className="grid gap-4 sm:grid-cols-3">
           <label className="block text-sm">
@@ -104,7 +104,7 @@ export function PropertyForm({
         </div>
       </fieldset>
 
-      <fieldset className="card space-y-4 p-5">
+      <fieldset className="card min-w-0 space-y-4 p-5">
         <legend className="px-1 text-sm font-semibold text-ink-900">Location</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm sm:col-span-2">
@@ -152,9 +152,9 @@ export function PropertyForm({
         </div>
       </fieldset>
 
-      <fieldset className="card space-y-4 p-5">
+      <fieldset className="card min-w-0 space-y-4 p-5">
         <legend className="px-1 text-sm font-semibold text-ink-900">Specifications</legend>
-        <div className="grid gap-4 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <label className="block text-sm">
             <span className="mb-1 block font-medium text-ink-700">Bedrooms</span>
             <input type="number" min={0} name="bedrooms" defaultValue={property?.bedrooms ?? undefined} className="input-field" />
@@ -174,7 +174,7 @@ export function PropertyForm({
         </div>
       </fieldset>
 
-      <fieldset className="card space-y-4 p-5">
+      <fieldset className="card min-w-0 space-y-4 p-5">
         <legend className="px-1 text-sm font-semibold text-ink-900">
           Owner &amp; Internal Notes <span className="font-normal text-ink-400">(never shown on the public site)</span>
         </legend>
@@ -203,7 +203,7 @@ export function PropertyForm({
         </label>
       </fieldset>
 
-      <button type="submit" className="btn-primary">
+      <button type="submit" className="btn-primary w-full sm:w-auto">
         {submitLabel}
       </button>
     </form>

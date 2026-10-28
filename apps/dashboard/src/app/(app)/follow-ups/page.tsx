@@ -48,12 +48,12 @@ function FollowUpSection({ title, items, tone }: { title: string; items: any[]; 
         <div className="space-y-2">
           {items.map((f) => (
             <div key={f.id} className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-ink-900">{f.customer?.full_name}</p>
                 <p className="text-sm text-ink-500">{formatDateTime(f.next_follow_up)}</p>
-                {f.notes && <p className="mt-1 text-sm text-ink-600">{f.notes}</p>}
+                {f.notes && <p className="mt-1 break-words text-sm text-ink-600">{f.notes}</p>}
               </div>
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
                 {f.customer?.phone && <CallButton phone={f.customer.phone} />}
                 {f.customer?.phone && <WhatsAppButton phone={f.customer.phone} />}
                 <form action={updateFollowUpStatusAction}>

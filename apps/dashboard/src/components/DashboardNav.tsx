@@ -42,33 +42,37 @@ export function DashboardNav({ staff }: { staff: StaffProfile }) {
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className="flex items-center justify-between border-b border-ink-100 bg-white px-4 py-3 lg:hidden">
-        <div className="flex items-center gap-2 font-semibold text-ink-900">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-900 text-xs text-white">
-            GP
-          </span>
-          Gayatri Properties
-        </div>
-        <button
-          type="button"
-          className="rounded-lg border border-ink-200 px-3 py-1.5 text-sm"
-          onClick={() => setOpen((v) => !v)}
-        >
-          Menu
-        </button>
-      </div>
-      {open && (
-        <div className="border-b border-ink-100 bg-white lg:hidden">
-          {links}
-          <div className="border-t border-ink-100 p-3">
-            <StaffFooter staff={staff} />
+      {/* Mobile top bar — stays pinned while scrolling; the menu drops down over the page */}
+      <header className="sticky top-0 z-40 border-b border-ink-100 bg-white lg:hidden">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex min-w-0 items-center gap-2 font-semibold text-ink-900">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink-900 text-xs text-white">
+              GP
+            </span>
+            <span className="truncate">Gayatri Properties</span>
           </div>
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-label="Toggle navigation"
+            className="rounded-lg border border-ink-200 px-3 py-2 text-sm font-medium"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? "Close" : "Menu"}
+          </button>
         </div>
-      )}
+        {open && (
+          <div className="absolute inset-x-0 top-full max-h-[calc(100vh-3.5rem)] overflow-y-auto border-b border-ink-100 bg-white shadow-lg">
+            {links}
+            <div className="border-t border-ink-100 p-3">
+              <StaffFooter staff={staff} />
+            </div>
+          </div>
+        )}
+      </header>
 
-      {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-ink-100 bg-white lg:flex">
+      {/* Desktop sidebar — sticky so the nav stays visible on long pages */}
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col overflow-y-auto border-r border-ink-100 bg-white lg:flex">
         <div className="flex items-center gap-2 px-5 py-5 font-semibold text-ink-900">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-900 text-sm text-white">
             GP

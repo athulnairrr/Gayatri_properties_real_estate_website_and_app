@@ -21,15 +21,15 @@ export default async function HomePage() {
   return (
     <div>
       <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-white">
-        <div className="container-page grid gap-10 py-16 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-28">
+        <div className="container-page grid gap-10 py-12 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-28">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-sand-600">
+            <p className="text-xs font-semibold uppercase tracking-wide text-sand-600 sm:text-sm">
               Thane · Vasant Vihar · Manpada · Majiwada
             </p>
-            <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight text-brand-950 sm:text-5xl">
+            <h1 className="mt-3 font-serif text-3xl font-semibold leading-tight text-brand-950 sm:text-5xl">
               Find a Property You&apos;ll Love
             </h1>
-            <p className="mt-4 max-w-lg text-lg text-brand-600">
+            <p className="mt-4 max-w-lg text-base text-brand-600 sm:text-lg">
               Buy or rent with confidence. Browse verified apartments, villas, plots and
               commercial spaces across Thane and nearby areas.
             </p>

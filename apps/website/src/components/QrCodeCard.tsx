@@ -30,7 +30,7 @@ export function QrCodeCard({ url }: { url: string }) {
           <span className="text-xs text-brand-400">Generating…</span>
         )}
       </div>
-      <div>
+      <div className="min-w-0">
         <p className="text-sm font-semibold text-brand-900">Print this QR for boards &amp; flyers</p>
         <p className="mt-1 text-xs text-brand-500">
           A visitor who scans it lands on this listing and is immediately asked for just their

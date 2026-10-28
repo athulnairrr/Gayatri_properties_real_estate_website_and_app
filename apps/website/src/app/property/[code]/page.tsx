@@ -43,7 +43,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   ];
 
   return (
-    <div className="container-page py-10">
+    <div className="container-page py-6 sm:py-10">
       <Suspense>
         <QrScanCapture propertyId={property.id} propertyLabel={property.title} />
       </Suspense>
@@ -55,7 +55,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="min-w-0 lg:col-span-2">
           <div className="overflow-hidden rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-100 to-sand-100">
             {media.length === 0 ? (
               <div className="flex aspect-video items-center justify-center text-brand-400">
@@ -90,7 +90,9 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-800">
               {transactionLabel(property.transaction_type)}
             </span>
-            <h1 className="mt-3 font-serif text-3xl font-semibold text-brand-950">{property.title}</h1>
+            <h1 className="mt-3 break-words font-serif text-2xl font-semibold text-brand-950 sm:text-3xl">
+              {property.title}
+            </h1>
             <p className="mt-1 text-brand-500">
               {property.locality}, {property.city}, {property.state}
             </p>

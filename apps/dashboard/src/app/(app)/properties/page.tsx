@@ -38,7 +38,7 @@ export default async function PropertiesPage({
         </Link>
       </div>
 
-      <form className="flex max-w-lg gap-2">
+      <form className="flex w-full gap-2 sm:max-w-lg">
         <input
           type="search"
           name="q"

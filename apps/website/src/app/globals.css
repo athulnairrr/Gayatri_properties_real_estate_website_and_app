@@ -27,5 +27,6 @@ body {
 }
 
 .input-field {
-  @apply w-full rounded-lg border border-brand-200 bg-white px-4 py-2.5 text-sm text-brand-950 placeholder:text-brand-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
+  /* 16px on phones — iOS Safari zooms the page when focusing an input smaller than that */
+  @apply w-full rounded-lg border border-brand-200 bg-white px-4 py-2.5 text-base text-brand-950 sm:text-sm placeholder:text-brand-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
 }

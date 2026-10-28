@@ -23,14 +23,18 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-brand-100 bg-white/90 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-serif text-xl font-semibold text-brand-900">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-800 text-sm text-white">
+        <Link
+          href="/"
+          className="flex min-w-0 items-center gap-2 font-serif text-lg font-semibold text-brand-900 sm:text-xl"
+        >
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-800 text-sm text-white">
             GP
           </span>
-          Gayatri Properties
+          <span className="truncate">Gayatri Properties</span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* Full nav only from lg — at tablet widths the six links + CTA don't fit beside the logo */}
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
@@ -44,7 +48,7 @@ export function SiteHeader() {
           <WishlistNavLink />
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <Link href="/contact" className="btn-primary">
             Talk to Us
           </Link>
@@ -53,7 +57,8 @@ export function SiteHeader() {
         <button
           type="button"
           aria-label="Toggle navigation"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-200 md:hidden"
+          aria-expanded={open}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-200 lg:hidden"
           onClick={() => setOpen((v) => !v)}
         >
           <span className="sr-only">Menu</span>
@@ -66,7 +71,7 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="border-t border-brand-100 bg-white md:hidden">
+        <nav className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-brand-100 bg-white lg:hidden">
           <div className="container-page flex flex-col gap-1 py-3">
             {NAV_LINKS.map((link) => (
               <Link

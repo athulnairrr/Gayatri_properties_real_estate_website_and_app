@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-brand-100 bg-brand-950 text-brand-100">
+    <footer className="mt-16 border-t sm:mt-24 border-brand-100 bg-brand-950 text-brand-100">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="font-serif text-lg font-semibold text-white">Gayatri Properties</div>
@@ -31,7 +31,7 @@ export function SiteFooter() {
           <ul className="mt-3 space-y-2 text-sm text-brand-300">
             <li>Vasant Vihar, Thane West, Maharashtra</li>
             <li>+91 98200 00000</li>
-            <li>hello@gayatriproperties.example</li>
+            <li className="break-all">hello@gayatriproperties.example</li>
           </ul>
         </div>
       </div>
