@@ -1,102 +1,118 @@
 import Link from "next/link";
-import { getAllImagesByPropertyId, getFeaturedProperties, searchProperties } from "@realestate/core";
+import { getAllImagesByPropertyId, searchProperties } from "@realestate/core";
 import { getServerSupabase } from "@/lib/supabaseServer";
-import { HeroSearch } from "@/components/HeroSearch";
-import { PropertyCard } from "@/components/PropertyCard";
-import { ContactCta } from "@/components/ContactCta";
+import { PropertyListItem } from "@/components/PropertyListItem";
 
-export const revalidate = 60;
+// The home page IS the listing: no hero, no filter form — visitors land straight on the
+// properties. The only controls are the header search (?q=) and the BHK chips (?bhk=).
+export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
-  const supabase = getServerSupabase();
-  const [featured, recent] = await Promise.all([
-    getFeaturedProperties(supabase, 6),
-    searchProperties(supabase, { page: 1, pageSize: 6, sort: "newest" }),
-  ]);
-  const propertyImages = await getAllImagesByPropertyId(supabase, [
-    ...featured.map((p) => p.id),
-    ...recent.items.map((p) => p.id),
-  ]);
+const PAGE_SIZE = 24;
 
-  return (
-    <div>
-      <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-white">
-        <div className="container-page grid gap-10 py-12 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-28">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-sand-600 sm:text-sm">
-              Thane · Vasant Vihar · Manpada · Majiwada
-            </p>
-            <h1 className="mt-3 font-serif text-3xl font-semibold leading-tight text-brand-950 sm:text-5xl">
-              Find a Property You&apos;ll Love
-            </h1>
-            <p className="mt-4 max-w-lg text-base text-brand-600 sm:text-lg">
-              Buy or rent with confidence. Browse verified apartments, villas, plots and
-              commercial spaces across Thane and nearby areas.
-            </p>
-          </div>
-          <div>
-            <HeroSearch />
-            <p className="mt-3 text-center text-sm text-brand-500 lg:text-left">
-              Prefer to search by distance?{" "}
-              <Link href="/properties#near-me" className="font-medium text-brand-800 underline">
-                Search near a location
-              </Link>
-            </p>
-          </div>
-        </div>
-      </section>
+const BHK_CHIPS: Array<{ label: string; value: string }> = [
+  { label: "All", value: "" },
+  { label: "1 BHK", value: "1" },
+  { label: "2 BHK", value: "2" },
+  { label: "3+ BHK", value: "3" },
+];
 
-      <section className="container-page py-16">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <h2 className="font-serif text-2xl font-semibold text-brand-950">Featured Properties</h2>
-            <p className="mt-1 text-sm text-brand-500">Handpicked listings our team recommends this week.</p>
-          </div>
-          <Link href="/properties" className="hidden text-sm font-medium text-brand-700 hover:underline sm:block">
-            View all properties →
-          </Link>
-        </div>
-        {featured.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((p) => (
-              <PropertyCard key={p.id} property={p} images={propertyImages[p.id] ?? []} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="container-page py-16">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <h2 className="font-serif text-2xl font-semibold text-brand-950">Recently Added</h2>
-            <p className="mt-1 text-sm text-brand-500">The newest listings on Gayatri Properties.</p>
-          </div>
-          <Link href="/properties" className="hidden text-sm font-medium text-brand-700 hover:underline sm:block">
-            View all properties →
-          </Link>
-        </div>
-        {recent.items.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {recent.items.map((p) => (
-              <PropertyCard key={p.id} property={p} images={propertyImages[p.id] ?? []} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      <ContactCta />
-    </div>
-  );
+interface PageProps {
+  searchParams: { q?: string; bhk?: string; page?: string };
 }
 
-function EmptyState() {
+function homeHref(params: { q?: string; bhk?: string; page?: number }) {
+  const sp = new URLSearchParams();
+  if (params.q) sp.set("q", params.q);
+  if (params.bhk) sp.set("bhk", params.bhk);
+  if (params.page && params.page > 1) sp.set("page", String(params.page));
+  const qs = sp.toString();
+  return qs ? `/?${qs}` : "/";
+}
+
+export default async function HomePage({ searchParams }: PageProps) {
+  const q = searchParams.q?.trim() || undefined;
+  const bhk = BHK_CHIPS.some((c) => c.value && c.value === searchParams.bhk) ? searchParams.bhk : undefined;
+  const page = Math.max(Number(searchParams.page) || 1, 1);
+
+  const supabase = getServerSupabase();
+  const result = await searchProperties(supabase, {
+    locality: q,
+    // 1 and 2 are exact; the last chip ("3+") catches 3 bedrooms and up
+    bedroomsExact: bhk && bhk !== "3" ? Number(bhk) : undefined,
+    bedrooms: bhk === "3" ? 3 : undefined,
+    sort: "newest",
+    page,
+    pageSize: PAGE_SIZE,
+  });
+  const images = await getAllImagesByPropertyId(supabase, result.items.map((p) => p.id));
+  const totalPages = Math.max(Math.ceil(result.total / PAGE_SIZE), 1);
+
   return (
-    <div className="rounded-2xl border border-dashed border-brand-200 bg-brand-50/50 p-12 text-center text-brand-500">
-      No properties to show yet. Please check back soon.
+    <div className="container-page py-4 sm:py-6">
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
+        {BHK_CHIPS.map((chip) => {
+          const active = (bhk ?? "") === chip.value;
+          return (
+            <Link
+              key={chip.label}
+              href={homeHref({ q, bhk: chip.value })}
+              prefetch={false}
+              aria-current={active ? "true" : undefined}
+              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                active
+                  ? "border-brand-800 bg-brand-800 text-white"
+                  : "border-brand-200 bg-white text-brand-800 hover:bg-brand-50"
+              }`}
+            >
+              {chip.label}
+            </Link>
+          );
+        })}
+      </div>
+
+      <p className="mt-3 text-sm text-brand-500">
+        {result.total} propert{result.total === 1 ? "y" : "ies"}
+        {q && (
+          <>
+            {" "}for &ldquo;{q}&rdquo; ·{" "}
+            <Link href={homeHref({ bhk })} prefetch={false} className="font-medium text-brand-800 underline">
+              Clear search
+            </Link>
+          </>
+        )}
+      </p>
+
+      {result.items.length === 0 ? (
+        <div className="mt-4 rounded-2xl border border-dashed border-brand-200 bg-brand-50/50 p-10 text-center text-brand-500">
+          No properties match. Try another area or BHK.
+        </div>
+      ) : (
+        <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {result.items.map((p) => (
+            <PropertyListItem key={p.id} property={p} image={images[p.id]?.[0]} />
+          ))}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <nav className="mt-8 flex items-center justify-center gap-3 text-sm font-medium">
+          {page > 1 ? (
+            <Link href={homeHref({ q, bhk, page: page - 1 })} prefetch={false} className="btn-secondary px-5 py-2">
+              ← Previous
+            </Link>
+          ) : (
+            <span />
+          )}
+          <span className="text-brand-500">
+            Page {page} of {totalPages}
+          </span>
+          {page < totalPages && (
+            <Link href={homeHref({ q, bhk, page: page + 1 })} prefetch={false} className="btn-secondary px-5 py-2">
+              Next →
+            </Link>
+          )}
+        </nav>
+      )}
     </div>
   );
 }

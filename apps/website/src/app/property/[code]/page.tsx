@@ -48,8 +48,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
         <QrScanCapture propertyId={property.id} propertyLabel={property.title} />
       </Suspense>
       <nav className="mb-4 text-sm text-brand-500">
-        <a href="/properties" className="hover:underline">
-          Properties
+        <a href="/" className="hover:underline">
+          All Properties
         </a>{" "}
         / <span className="text-brand-700">{property.property_code}</span>
       </nav>

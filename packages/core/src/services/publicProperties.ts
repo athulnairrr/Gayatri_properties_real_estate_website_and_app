@@ -17,7 +17,8 @@ export interface PropertySearchFilters {
   locality?: string; // matched against locality/city/title, case-insensitive
   minPrice?: number;
   maxPrice?: number;
-  bedrooms?: number;
+  bedrooms?: number; // minimum — "2" means 2 or more
+  bedroomsExact?: number; // exactly this many — used by the home page's "2 BHK" chips
   sort?: "newest" | "price_asc" | "price_desc";
   page?: number;
   pageSize?: number;
@@ -43,6 +44,7 @@ export async function searchProperties(
   if (filters.minPrice != null) query = query.gte("price", filters.minPrice);
   if (filters.maxPrice != null) query = query.lte("price", filters.maxPrice);
   if (filters.bedrooms != null) query = query.gte("bedrooms", filters.bedrooms);
+  if (filters.bedroomsExact != null) query = query.eq("bedrooms", filters.bedroomsExact);
   if (filters.locality) {
     const term = filters.locality.trim();
     if (term) {
